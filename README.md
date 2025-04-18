@@ -8,3 +8,4 @@ Tasks Done:
 2. Basic Filtering and Sorting
 3. Simple Aggregation and Grouping
 4. Multi-Table JOINs
+5. Subqueries and Nested Queries
