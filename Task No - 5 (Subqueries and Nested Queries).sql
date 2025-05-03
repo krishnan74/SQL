@@ -1,52 +1,43 @@
--- Create a table named Customers
-CREATE TABLE Customers (
-    CustomerID INT PRIMARY KEY,
+-- Create the Employees table with Department included
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
     FirstName VARCHAR(50),
     LastName VARCHAR(50),
-    Email VARCHAR(100)
+    Department VARCHAR(50),
+    Salary DECIMAL(10, 2)
 );
 
--- Create a table named Orders with a foreign key reference to Customers
-CREATE TABLE Orders (
-    OrderID INT PRIMARY KEY,
-    CustomerID INT,
-    OrderDate DATE,
-    TotalAmount DECIMAL(10, 2),
-    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+-- Insert sample data into Employees table
+INSERT INTO Employees (EmployeeID, FirstName, LastName, Department, Salary)
+VALUES
+(1, 'Tony', 'Stark', 'Engineering', 150000.00),
+(2, 'Bruce', 'Wayne', 'Engineering', 140000.00),
+(3, 'Rachel', 'Green', 'Sales', 90000.00),
+(4, 'Monica', 'Geller', 'Sales', 88000.00),
+(5, 'Walter', 'White', 'Research', 110000.00),
+(6, 'Jon', 'Snow', 'Research', 92000.00);
+
+-- Subquery in WHERE clause: Select employees earning more than their department's average salary
+SELECT * FROM Employees E
+WHERE Salary > (
+    SELECT AVG(Salary)
+    FROM Employees
+    WHERE Department = E.Department
 );
 
--- Insert sample data into Customers table
-INSERT INTO Customers (CustomerID, FirstName, LastName, Email)
-VALUES
-(1, 'Monica', 'Geller', 'monica@example.com'),
-(2, 'Chandler', 'Bing', 'chandler@example.com'),
-(3, 'Ross', 'Geller', 'ross@example.com'),
-(4, 'Joey', 'Tribbiani', 'joey@example.com');
-
--- Insert sample data into Orders table
-INSERT INTO Orders (OrderID, CustomerID, OrderDate, TotalAmount)
-VALUES
-(101, 1, '2023-01-15', 250.00),
-(102, 2, '2023-02-10', 175.50),
-(103, 1, '2023-03-05', 320.00),
-(104, 3, '2023-03-20', 89.99);
-
--- INNER JOIN: Get customer names along with their order details
+-- Subquery in SELECT list: Show each employee and the average salary of their department
 SELECT 
-    Customers.FirstName,
-    Customers.LastName,
-    Orders.OrderID,
-    Orders.OrderDate,
-    Orders.TotalAmount
-FROM Customers
-INNER JOIN Orders ON Customers.CustomerID = Orders.CustomerID;
+    FirstName,
+    LastName,
+    Department,
+    Salary,
+    (SELECT AVG(Salary) 
+     FROM Employees 
+     WHERE Department = E.Department) AS DepartmentAvgSalary
+FROM Employees E;
 
--- LEFT JOIN: Get all customers and their orders if there is any
-SELECT 
-    Customers.FirstName,
-    Customers.LastName,
-    Orders.OrderID,
-    Orders.OrderDate,
-    Orders.TotalAmount
-FROM Customers
-LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID;
+-- Non-correlated subquery: Get employees with salary greater than the overall average salary
+SELECT * FROM Employees
+WHERE Salary > (
+    SELECT AVG(Salary) FROM Employees
+);

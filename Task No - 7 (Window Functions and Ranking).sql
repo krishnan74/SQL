@@ -1,3 +1,5 @@
+DROP TABLE Employees;
+
 -- Create the Employees table with Department and Salary
 CREATE TABLE Employees (
     EmployeeID INTEGER PRIMARY KEY,
@@ -11,9 +13,9 @@ CREATE TABLE Employees (
 INSERT INTO Employees (EmployeeID, FirstName, LastName, Department, Salary)
 VALUES
 (1, 'Tony', 'Stark', 'Engineering', 150000.00),
-(2, 'Bruce', 'Wayne', 'Engineering', 140000.00),
+(2, 'Bruce', 'Wayne', 'Engineering', 150000.00),
 (3, 'Rachel', 'Green', 'Sales', 90000.00),
-(4, 'Monica', 'Geller', 'Sales', 88000.00),
+(4, 'Monica', 'Geller', 'Sales', 90000.00),
 (5, 'Walter', 'White', 'Research', 110000.00),
 (6, 'Jon', 'Snow', 'Research', 92000.00),
 (7, 'Joey', 'Tribbiani', 'Sales', 85000.00);
@@ -35,7 +37,7 @@ SELECT
     LastName,
     Department,
     Salary,
-    RANK() OVER (PARTITION BY Department ORDER BY Salary DESC) AS SalaryRank
+    RANK() OVER ( ORDER BY Salary DESC) AS SalaryRank
 FROM Employees;
 
 -- 3. Use DENSE_RANK() to assign ranks without gaps
@@ -45,7 +47,7 @@ SELECT
     LastName,
     Department,
     Salary,
-    DENSE_RANK() OVER (PARTITION BY Department ORDER BY Salary DESC) AS DenseSalaryRank
+    DENSE_RANK() OVER (ORDER BY Salary DESC) AS DenseSalaryRank
 FROM Employees;
 
 -- 4. Use LAG() and LEAD() to compare salaries with previous and next employees in each department
